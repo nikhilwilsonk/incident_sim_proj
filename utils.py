@@ -55,3 +55,31 @@ HTML_TEMPLATE = '''
 </html>
 '''
 
+THREAT_PATTERNS = {
+    'sql_injection': [
+        r".*SQL Injection.*",
+        r".*SELECT.*WHERE.*=.*OR.*",
+        r".*UNION SELECT.*",
+        r".*'--.*",
+        r".*\"\s+OR\s+\".*=.*"
+    ],
+    'xss': [
+        r".*XSS attempt.*",
+        r".*<script>.*</script>.*",
+        r".*alert\(.*\).*",
+        r".*javascript:.*"
+    ],
+    'command_injection': [
+        r".*Command Injection.*",
+        r".*;\s*ls\s*",
+        r".*;\s*rm\s*",
+        r".*\|\s*bash.*",
+        r".*\|\s*sh.*"
+    ],
+    'directory_traversal': [
+        r".*\.\.\/.*",
+        r".*\.\.\\.*",
+        r".*%2e%2e%2f.*"
+    ]
+}
+

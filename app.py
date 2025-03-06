@@ -3,7 +3,7 @@ import os
 import json
 import datetime
 import re
-from ui import HTML_TEMPLATE
+from utils import HTML_TEMPLATE
 
 app = Flask(__name__)
 os.makedirs('log/webapp', exist_ok=True)
