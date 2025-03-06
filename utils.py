@@ -83,3 +83,41 @@ THREAT_PATTERNS = {
     ]
 }
 
+ATTACK_MAPPING = {
+    'sql_injection': {
+        'tactic': 'Initial Access, Credential Access',
+        'technique': 'T1190 - Exploit Public-Facing Application',
+        'description': 'Attacker attempts to inject SQL commands to bypass authentication or extract data'
+    },
+    'xss': {
+        'tactic': 'Initial Access, Defense Evasion',
+        'technique': 'T1059.007 - Command and Scripting Interpreter: JavaScript',
+        'description': 'Attacker attempts to inject malicious scripts to be executed in users\' browsers'
+    },
+    'command_injection': {
+        'tactic': 'Execution, Privilege Escalation',
+        'technique': 'T1059 - Command and Scripting Interpreter',
+        'description': 'Attacker attempts to execute system commands through application vulnerabilities'
+    }
+}
+
+MITIGATIONS = {
+    'sql_injection': [
+        'Use prepared statements or parameterized queries',
+        'Implement input validation and sanitization',
+        'Apply principle of least privilege for database accounts',
+        'Consider using an ORM (Object-Relational Mapping) tool'
+    ],
+    'xss': [
+        'Implement Content-Security-Policy headers',
+        'Use context-appropriate output encoding',
+        'Sanitize user input before rendering to page',
+        'Use modern frameworks that automatically escape content'
+    ],
+    'command_injection': [
+        'Avoid using system commands with user-supplied input',
+        'Use safer alternatives to execute system functionality',
+        'Implement strict input validation',
+        'Run applications with minimal required privileges'
+    ]
+}
