@@ -8,13 +8,11 @@ from utils import THREAT_PATTERNS
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-os.makedirs('log/monitoring', exist_ok=True)
-
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('log/monitoring/monitor.log'),
+        logging.FileHandler('/var/log/monitoring/monitor.log'),
         logging.StreamHandler()
     ]
 )
@@ -73,7 +71,7 @@ class SecurityMonitor(FileSystemEventHandler):
             "raw_log": log_line.strip(),
             "severity": self.determine_severity(threat_type)
         }
-        with open('log/monitoring/alerts.json', 'a') as f:
+        with open('/var/log/monitoring/alerts.json', 'a') as f:
             f.write(json.dumps(alert) + '\n')
     
     def determine_severity(self, threat_type):
@@ -85,7 +83,7 @@ class SecurityMonitor(FileSystemEventHandler):
             return "LOW"
 
 if __name__ == "__main__":
-    paths_to_watch = ['log/webapp']
+    paths_to_watch = ['/var/log/webapp']
     
     logging.info("Starting Security Monitoring Service")
     logging.info(f"Watching directories: {', '.join(paths_to_watch)}")

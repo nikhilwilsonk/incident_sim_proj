@@ -1,0 +1,46 @@
+services:
+  # web app
+  webapp:
+    build: 
+      context: ./webapp
+      dockerfile: Dockerfile
+    container_name: vuln-webapp
+    ports:
+      - "8080:80"
+    networks:
+      - security-net
+    volumes:
+      - ./webapp/logs:/var/log/webapp
+
+  # Security monitoring
+  monitoring:
+    build:
+      context: ./monitoring
+      dockerfile: Dockerfile
+    container_name: security-monitor
+    depends_on:
+      - webapp
+    volumes:
+      - ./webapp/logs:/var/log/webapp:ro
+      - ./monitoring/logs:/var/log/monitoring
+    networks:
+      - security-net
+
+  # responder and report gen
+  response:
+    build:
+      context: ./response
+      dockerfile: Dockerfile
+    container_name: incident-response
+    depends_on:
+      - monitoring
+    volumes:
+      - ./monitoring/logs:/var/log/monitoring:ro
+      - ./response/logs:/var/log/response
+      - ./response/reports:/var/reports
+    networks:
+      - security-net
+
+networks:
+  security-net:
+    driver: bridge

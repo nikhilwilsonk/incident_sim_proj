@@ -7,13 +7,13 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from utils import ATTACK_MAPPING,MITIGATIONS
 import os
-os.makedirs('log/response', exist_ok=True)
+os.makedirs('/var/log/response', exist_ok=True)
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('log/response/responder.log'),
+        logging.FileHandler('/var/log/response/responder.log'),
         logging.StreamHandler()
     ]
 )
@@ -23,7 +23,7 @@ class IncidentResponder(FileSystemEventHandler):
         self.alert_queue = []
         self.processed_incidents = set()
 
-        with open('report_template.html', 'r') as f:
+        with open('/app/report_template.html', 'r') as f:
             self.report_template = Template(f.read()) #report template build
     
     def on_modified(self, event):
@@ -75,11 +75,11 @@ class IncidentResponder(FileSystemEventHandler):
     def generate_report(self, incident):
         report_html = self.report_template.render(incident=incident)
         
-        report_file = f"reports/incident-{incident['incident_id']}.html"
+        report_file = f"/var/reports/incident-{incident['incident_id']}.html"
         with open(report_file, 'w') as f:
             f.write(report_html)
         
-        json_file = f"reports/incident-{incident['incident_id']}.json"
+        json_file = f"/var/reports/incident-{incident['incident_id']}.json"
         with open(json_file, 'w') as f:
             json.dump(incident, f, indent=2)
         logging.info(f"Generated incident report: {report_file}")
@@ -98,12 +98,12 @@ class IncidentResponder(FileSystemEventHandler):
         incident['status'] = 'responded'
         incident['resolution_time'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        json_file = f"reports/incident-{incident['incident_id']}.json"
+        json_file = f"/var/reports/incident-{incident['incident_id']}.json"
         with open(json_file, 'w') as f:
             json.dump(incident, f, indent=2)
 
 if __name__ == "__main__":
-    paths_to_watch = ['log/monitoring']
+    paths_to_watch = ['/var/log/monitoring']
     
     logging.info("Starting Incident Responser")
     logging.info(f"Watching directories: {', '.join(paths_to_watch)}")
