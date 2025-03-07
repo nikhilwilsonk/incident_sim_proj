@@ -6,7 +6,7 @@ import re
 from utils import HTML_TEMPLATE
 
 app = Flask(__name__)
-os.makedirs('log/webapp', exist_ok=True)
+os.makedirs('/var/log/webapp', exist_ok=True)
 
 def log_access(page, params):
     '''
@@ -14,7 +14,7 @@ def log_access(page, params):
     the ip of the client
     the parameter which is being passed to the url 
     '''
-    with open('log/webapp/access.log', 'a') as log_file:
+    with open('/var/log/webapp/access.log', 'a') as log_file:
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ip = request.remote_addr
         user_agent = request.headers.get('User-Agent', '')
@@ -28,7 +28,7 @@ def log_security_event(event_type, input_value):
     cross-site scripting
     command executions are logged using this function
     '''
-    with open('log/webapp/security.log', 'a') as log_file:
+    with open('/var/log/webapp/security.log', 'a') as log_file:
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ip = request.remote_addr
         log_entry = f"[{timestamp}] ALERT: Possible {event_type} attempt from {ip} - Input: {input_value}\n"
